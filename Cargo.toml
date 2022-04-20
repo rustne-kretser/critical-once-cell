@@ -1,0 +1,20 @@
+[package]
+name = "critical-once-cell"
+version = "0.1.0"
+edition = "2021"
+authors = ["Eivind Alexander Bergem <eivind.bergem@gmail.com>"]
+license = "MPL-2.0"
+description = "Thread-safe OnceCell and Lazy backed by critical section"
+repository = "https://github.com/rustne-kretser/critical-once-cell"
+readme = "README.md"
+categories = ["no-std", "concurrency", "embedded"]
+keywords = ["no_std"]
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+critical-section = "0.2.7"

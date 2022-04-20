@@ -1,0 +1,73 @@
+name: Rust
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  readme:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/install@v0.1
+      with:
+        crate: cargo-readme
+        version: latest
+        use-tool-cache: true
+    - uses: actions-rs/install@v0.1
+      with:
+        crate: cargo-outdated
+        version: latest
+        use-tool-cache: true
+    - name: Readme
+      run: cargo readme > README.md && git diff --exit-code
+
+  cargo-outdated:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/install@v0.1
+      with:
+        crate: cargo-outdated
+        version: latest
+        use-tool-cache: true
+    - name: Outdated dependencies
+      run: cargo outdated --exit-code 1
+
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Format
+      run: cargo fmt --all -- --check
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Format
+      run: cargo fmt --all -- --check
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
+    - name: Run loom tests
+      run: RUSTFLAGS="--cfg loom" cargo test --release loom_tests
+
+  miri-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+          components: miri
+      - name: Run miri tests
+        run: cargo +nightly miri test
