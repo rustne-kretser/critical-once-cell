@@ -186,11 +186,23 @@ impl<T> CriticalOnceCell<T> {
         F: FnOnce() -> Result<T, E>,
     {
         critical_section::with(|_| {
-            let cell = unsafe { &mut *self.inner.get() };
+            let cell = {
+                // Get shared reference first, to avoid retagging in case
+                // there are other references in use
+                let cell = unsafe { &*self.inner.get() };
 
-            if cell.is_none() {
-                *cell = Some(f()?);
-            }
+                if cell.is_none() {
+                    // In case the cell is empty, we can safely get a
+                    // unique reference
+                    let cell = unsafe { &mut *self.inner.get() };
+                    *cell = Some(f()?);
+
+                    // Return cell, converting to shared reference
+                    cell
+                } else {
+                    cell
+                }
+            };
 
             Ok(unsafe { cell.as_ref().unwrap_unchecked() })
         })

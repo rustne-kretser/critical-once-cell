@@ -17,4 +17,7 @@ include = [
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-critical-section = "0.2.7"
+critical-section = "1.2.0"
+
+[dev-dependencies]
+critical-section = { version = "1.2.0", features = ["std"] }
