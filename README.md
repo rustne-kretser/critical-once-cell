@@ -42,7 +42,7 @@ Add this to your Cargo.toml:
 
 ```toml
 [dependencies]
-critical-once-cell = "0.1.0"
+critical-once-cell = "0.2.0"
 ```
 
 # License
