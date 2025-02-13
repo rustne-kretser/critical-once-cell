@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-02-13
+
 - Bumped `critical-section` to 1.2.0, since the previous version was yanked
 - Fixed soundness issue caught by new version of miri
 
